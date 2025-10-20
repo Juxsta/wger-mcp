@@ -1,0 +1,42 @@
+task_assignments:
+  # GROUP 1: Project Foundation & Tooling
+  # Since this is infrastructure setup (not database, API, or UI), we'll use api-engineer
+  # as they handle general backend engineering work including project setup
+  - task_group: "Task Group 1: Project Foundation & Tooling"
+    assigned_subagent: "api-engineer"
+
+  # GROUP 2: Core Infrastructure (MCP Server, HTTP Client, Auth, Cache)
+  # This is backend API-like work - HTTP client, auth, server setup
+  - task_group: "Task Group 2: Core Infrastructure (MCP Server, HTTP Client, Auth, Cache)"
+    assigned_subagent: "api-engineer"
+
+  # GROUP 3: Tool Input Validation Schemas
+  # This is backend validation and schema work
+  - task_group: "Task Group 3: Tool Input Validation Schemas"
+    assigned_subagent: "api-engineer"
+
+  # GROUP 4: Exercise Discovery Tools (5 Tools)
+  # These are API-like tools that handle business logic and external API calls
+  - task_group: "Task Group 4: Exercise Discovery Tools (5 Tools)"
+    assigned_subagent: "api-engineer"
+
+  # GROUP 5: Workout Routine Management Tools (3 Tools)
+  # These are API-like tools with authentication and business logic
+  - task_group: "Task Group 5: Workout Routine Management Tools (3 Tools)"
+    assigned_subagent: "api-engineer"
+
+  # GROUP 6: Unit Tests
+  # This is clearly testing work
+  - task_group: "Task Group 6: Unit Tests"
+    assigned_subagent: "testing-engineer"
+
+  # GROUP 7: Integration Tests & Coverage Validation
+  # This is clearly testing work
+  - task_group: "Task Group 7: Integration Tests & Coverage Validation"
+    assigned_subagent: "testing-engineer"
+
+  # GROUP 8: Documentation & Deployment
+  # Documentation and deployment is typically handled by developers
+  # We'll use api-engineer since they understand the backend implementation
+  - task_group: "Task Group 8: Documentation & Deployment"
+    assigned_subagent: "api-engineer"
