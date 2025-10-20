@@ -73,20 +73,20 @@ export const GetExerciseDetailsSchema = z.object({
  * Validates workout name and description
  */
 export const CreateWorkoutSchema = z.object({
-  /** Required workout name (1-200 characters) */
+  /** Required workout name (1-100 characters) */
   name: z
     .string()
     .min(1, {
       message: 'Workout name is required and cannot be empty',
     })
-    .max(200, {
-      message: 'Workout name cannot exceed 200 characters',
+    .max(100, {
+      message: 'Workout name cannot exceed 100 characters',
     }),
-  /** Optional workout description (max 2000 characters) */
+  /** Optional workout description (max 500 characters) */
   description: z
     .string()
-    .max(2000, {
-      message: 'Workout description cannot exceed 2000 characters',
+    .max(500, {
+      message: 'Workout description cannot exceed 500 characters',
     })
     .optional(),
 });

@@ -11,6 +11,26 @@ import { mockPaginatedExercises } from '../../fixtures/api-responses';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+// Set up axios.create mock before any imports that use it
+const mockAxiosInstance = {
+  get: jest.fn(),
+  post: jest.fn(),
+  put: jest.fn(),
+  delete: jest.fn(),
+  patch: jest.fn(),
+  interceptors: {
+    request: {
+      use: jest.fn(),
+    },
+    response: {
+      use: jest.fn(),
+    },
+  },
+};
+
+mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
+mockedAxios.isAxiosError.mockReturnValue(true);
+
 // Mock auth manager
 const mockAuthManager = {
   hasCredentials: jest.fn().mockReturnValue(true),
@@ -27,31 +47,12 @@ import { WgerClient } from '../../../src/client/wger-client';
 
 describe('WgerClient', () => {
   let client: WgerClient;
-  let mockAxiosInstance: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    // Create mock axios instance with interceptors
-    mockAxiosInstance = {
-      get: jest.fn(),
-      post: jest.fn(),
-      put: jest.fn(),
-      delete: jest.fn(),
-      patch: jest.fn(),
-      interceptors: {
-        request: {
-          use: jest.fn(),
-        },
-        response: {
-          use: jest.fn(),
-        },
-      },
-    };
-
-    mockedAxios.create.mockReturnValue(mockAxiosInstance);
+    // Re-setup mocks after clearAllMocks
+    mockedAxios.create.mockReturnValue(mockAxiosInstance as any);
     mockedAxios.isAxiosError.mockReturnValue(true);
-
     client = new WgerClient();
   });
 

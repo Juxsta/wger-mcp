@@ -3,7 +3,7 @@
  * Mocks wger API endpoints with realistic responses and network delays
  */
 
-import { http, HttpResponse, delay } from 'msw';
+import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 import {
   mockExercises,
@@ -29,46 +29,38 @@ function getNetworkDelay(): number {
  */
 export const handlers = [
   // Authentication endpoint - POST /api/v2/token
-  http.post(`${BASE_URL}/token`, async () => {
-    await delay(getNetworkDelay());
-    return HttpResponse.json(mockAuthResponses.success);
+  rest.post(`${BASE_URL}/token`, (_req, res, ctx) => {
+    return res(ctx.delay(getNetworkDelay()), ctx.json(mockAuthResponses.success));
   }),
 
   // Token refresh endpoint - POST /api/v2/token/refresh
-  http.post(`${BASE_URL}/token/refresh`, async () => {
-    await delay(getNetworkDelay());
-    return HttpResponse.json(mockAuthResponses.refreshSuccess);
+  rest.post(`${BASE_URL}/token/refresh`, (_req, res, ctx) => {
+    return res(ctx.delay(getNetworkDelay()), ctx.json(mockAuthResponses.refreshSuccess));
   }),
 
   // List categories - GET /api/v2/exercisecategory/
-  http.get(`${BASE_URL}/exercisecategory/`, async () => {
-    await delay(getNetworkDelay());
-    return HttpResponse.json(mockPaginatedCategories);
+  rest.get(`${BASE_URL}/exercisecategory/`, (_req, res, ctx) => {
+    return res(ctx.delay(getNetworkDelay()), ctx.json(mockPaginatedCategories));
   }),
 
   // List muscles - GET /api/v2/muscle/
-  http.get(`${BASE_URL}/muscle/`, async () => {
-    await delay(getNetworkDelay());
-    return HttpResponse.json(mockPaginatedMuscles);
+  rest.get(`${BASE_URL}/muscle/`, (_req, res, ctx) => {
+    return res(ctx.delay(getNetworkDelay()), ctx.json(mockPaginatedMuscles));
   }),
 
   // List equipment - GET /api/v2/equipment/
-  http.get(`${BASE_URL}/equipment/`, async () => {
-    await delay(getNetworkDelay());
-    return HttpResponse.json(mockPaginatedEquipment);
+  rest.get(`${BASE_URL}/equipment/`, (_req, res, ctx) => {
+    return res(ctx.delay(getNetworkDelay()), ctx.json(mockPaginatedEquipment));
   }),
 
   // Search exercises - GET /api/v2/exercise/
-  http.get(`${BASE_URL}/exercise/`, async ({ request }) => {
-    await delay(getNetworkDelay());
-
-    const url = new URL(request.url);
-    const limit = parseInt(url.searchParams.get('limit') || '20');
-    const offset = parseInt(url.searchParams.get('offset') || '0');
-    const search = url.searchParams.get('search');
-    const muscle = url.searchParams.get('muscles');
-    const equipment = url.searchParams.get('equipment');
-    const category = url.searchParams.get('category');
+  rest.get(`${BASE_URL}/exercise/`, (req, res, ctx) => {
+    const limit = parseInt(req.url.searchParams.get('limit') || '20');
+    const offset = parseInt(req.url.searchParams.get('offset') || '0');
+    const search = req.url.searchParams.get('search');
+    const muscle = req.url.searchParams.get('muscles');
+    const equipment = req.url.searchParams.get('equipment');
+    const category = req.url.searchParams.get('category');
 
     // Filter exercises based on query parameters
     let filteredExercises = [...mockExercises];
@@ -101,108 +93,113 @@ export const handlers = [
     const hasNext = offset + limit < filteredExercises.length;
     const hasPrevious = offset > 0;
 
-    return HttpResponse.json({
-      count: filteredExercises.length,
-      next: hasNext ? `${BASE_URL}/exercise/?limit=${limit}&offset=${offset + limit}` : null,
-      previous: hasPrevious
-        ? `${BASE_URL}/exercise/?limit=${limit}&offset=${Math.max(0, offset - limit)}`
-        : null,
-      results: paginatedResults,
-    });
+    return res(
+      ctx.delay(getNetworkDelay()),
+      ctx.json({
+        count: filteredExercises.length,
+        next: hasNext ? `${BASE_URL}/exercise/?limit=${limit}&offset=${offset + limit}` : null,
+        previous: hasPrevious
+          ? `${BASE_URL}/exercise/?limit=${limit}&offset=${Math.max(0, offset - limit)}`
+          : null,
+        results: paginatedResults,
+      })
+    );
   }),
 
   // Get exercise details - GET /api/v2/exercise/:id/
-  http.get(`${BASE_URL}/exercise/:id/`, async ({ params }) => {
-    await delay(getNetworkDelay());
-
-    const exerciseId = parseInt(params.id as string);
+  rest.get(`${BASE_URL}/exercise/:id/`, (req, res, ctx) => {
+    const exerciseId = parseInt(req.params.id as string);
     const exercise = mockExercises.find((ex) => ex.id === exerciseId);
 
     if (!exercise) {
-      return new HttpResponse(JSON.stringify(mockErrorResponses.notFound), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(404),
+        ctx.json(mockErrorResponses.notFound)
+      );
     }
 
-    return HttpResponse.json(exercise);
+    return res(ctx.delay(getNetworkDelay()), ctx.json(exercise));
   }),
 
   // List user workouts - GET /api/v2/workout/
-  http.get(`${BASE_URL}/workout/`, async ({ request }) => {
-    await delay(getNetworkDelay());
-
-    const authHeader = request.headers.get('Authorization');
+  rest.get(`${BASE_URL}/workout/`, (req, res, ctx) => {
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return new HttpResponse(JSON.stringify(mockErrorResponses.unauthorized), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(401),
+        ctx.json(mockErrorResponses.unauthorized)
+      );
     }
 
-    const url = new URL(request.url);
-    const limit = parseInt(url.searchParams.get('limit') || '20');
-    const offset = parseInt(url.searchParams.get('offset') || '0');
+    const limit = parseInt(req.url.searchParams.get('limit') || '20');
+    const offset = parseInt(req.url.searchParams.get('offset') || '0');
 
     const paginatedResults = mockPaginatedWorkouts.results.slice(offset, offset + limit);
 
-    return HttpResponse.json({
-      count: mockPaginatedWorkouts.count,
-      next:
-        offset + limit < mockPaginatedWorkouts.count
-          ? `${BASE_URL}/workout/?limit=${limit}&offset=${offset + limit}`
-          : null,
-      previous:
-        offset > 0
-          ? `${BASE_URL}/workout/?limit=${limit}&offset=${Math.max(0, offset - limit)}`
-          : null,
-      results: paginatedResults,
-    });
+    return res(
+      ctx.delay(getNetworkDelay()),
+      ctx.json({
+        count: mockPaginatedWorkouts.count,
+        next:
+          offset + limit < mockPaginatedWorkouts.count
+            ? `${BASE_URL}/workout/?limit=${limit}&offset=${offset + limit}`
+            : null,
+        previous:
+          offset > 0
+            ? `${BASE_URL}/workout/?limit=${limit}&offset=${Math.max(0, offset - limit)}`
+            : null,
+        results: paginatedResults,
+      })
+    );
   }),
 
   // Create workout - POST /api/v2/workout/
-  http.post(`${BASE_URL}/workout/`, async ({ request }) => {
-    await delay(getNetworkDelay());
-
-    const authHeader = request.headers.get('Authorization');
+  rest.post(`${BASE_URL}/workout/`, (req, res, ctx) => {
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return new HttpResponse(JSON.stringify(mockErrorResponses.unauthorized), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(401),
+        ctx.json(mockErrorResponses.unauthorized)
+      );
     }
 
-    const body = (await request.json()) as { name?: string; description?: string };
+    const body = req.body as { name?: string; description?: string };
 
     if (!body.name) {
-      return new HttpResponse(JSON.stringify(mockErrorResponses.validationError), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(400),
+        ctx.json(mockErrorResponses.validationError)
+      );
     }
 
-    return HttpResponse.json({
-      id: 1003,
-      name: body.name,
-      description: body.description || '',
-      creation_date: new Date().toISOString(),
-      days: [],
-    });
+    return res(
+      ctx.delay(getNetworkDelay()),
+      ctx.json({
+        id: 1003,
+        name: body.name,
+        description: body.description || '',
+        creation_date: new Date().toISOString(),
+        days: [],
+      })
+    );
   }),
 
   // Add exercise to routine - POST /api/v2/set/
-  http.post(`${BASE_URL}/set/`, async ({ request }) => {
-    await delay(getNetworkDelay());
-
-    const authHeader = request.headers.get('Authorization');
+  rest.post(`${BASE_URL}/set/`, (req, res, ctx) => {
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return new HttpResponse(JSON.stringify(mockErrorResponses.unauthorized), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(401),
+        ctx.json(mockErrorResponses.unauthorized)
+      );
     }
 
-    const body = (await request.json()) as {
+    const body = req.body as {
       exerciseset?: number;
       exercise?: number;
       sets?: number;
@@ -213,21 +210,25 @@ export const handlers = [
     };
 
     if (!body.exerciseset || !body.exercise || !body.sets) {
-      return new HttpResponse(JSON.stringify(mockErrorResponses.validationError), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(400),
+        ctx.json(mockErrorResponses.validationError)
+      );
     }
 
-    return HttpResponse.json({
-      id: 3010,
-      exercise: body.exercise,
-      sets: body.sets,
-      reps: body.reps || 0,
-      weight: body.weight || 0,
-      order: body.order || 1,
-      comment: body.comment || '',
-    });
+    return res(
+      ctx.delay(getNetworkDelay()),
+      ctx.json({
+        id: 3010,
+        exercise: body.exercise,
+        sets: body.sets,
+        reps: body.reps || 0,
+        weight: body.weight || 0,
+        order: body.order || 1,
+        comment: body.comment || '',
+      })
+    );
   }),
 ];
 
@@ -238,53 +239,52 @@ export const handlers = [
 export const errorHandlers = {
   // Simulate 401 Unauthorized errors
   unauthorized: [
-    http.get(`${BASE_URL}/workout/`, async () => {
-      await delay(getNetworkDelay());
-      return new HttpResponse(JSON.stringify(mockErrorResponses.unauthorized), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    rest.get(`${BASE_URL}/workout/`, (_req, res, ctx) => {
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(401),
+        ctx.json(mockErrorResponses.unauthorized)
+      );
     }),
   ],
 
   // Simulate 404 Not Found errors
   notFound: [
-    http.get(`${BASE_URL}/exercise/:id/`, async () => {
-      await delay(getNetworkDelay());
-      return new HttpResponse(JSON.stringify(mockErrorResponses.notFound), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    rest.get(`${BASE_URL}/exercise/:id/`, (_req, res, ctx) => {
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(404),
+        ctx.json(mockErrorResponses.notFound)
+      );
     }),
   ],
 
   // Simulate 429 Rate Limit errors
   rateLimit: [
-    http.get(`${BASE_URL}/exercise/`, async () => {
-      await delay(getNetworkDelay());
-      return new HttpResponse(JSON.stringify(mockErrorResponses.rateLimited), {
-        status: 429,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    rest.get(`${BASE_URL}/exercise/`, (_req, res, ctx) => {
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(429),
+        ctx.json(mockErrorResponses.rateLimited)
+      );
     }),
   ],
 
   // Simulate 500 Server errors
   serverError: [
-    http.get(`${BASE_URL}/exercise/`, async () => {
-      await delay(getNetworkDelay());
-      return new HttpResponse(JSON.stringify(mockErrorResponses.serverError), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    rest.get(`${BASE_URL}/exercise/`, (_req, res, ctx) => {
+      return res(
+        ctx.delay(getNetworkDelay()),
+        ctx.status(500),
+        ctx.json(mockErrorResponses.serverError)
+      );
     }),
   ],
 
   // Simulate network timeout/connection errors
   networkError: [
-    http.get(`${BASE_URL}/exercise/`, async () => {
-      await delay(getNetworkDelay());
-      return HttpResponse.error();
+    rest.get(`${BASE_URL}/exercise/`, (_req, res, _ctx) => {
+      return res.networkError('Network connection failed');
     }),
   ],
 };

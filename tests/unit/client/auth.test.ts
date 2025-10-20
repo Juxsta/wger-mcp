@@ -4,13 +4,29 @@
  */
 
 import axios from 'axios';
-import { AuthManager } from '../../../src/client/auth';
 import { AuthenticationError } from '../../../src/utils/errors';
 import { mockAuthResponses } from '../../fixtures/api-responses';
 
 // Mock axios
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+// Mock config to use username/password instead of API key
+jest.mock('../../../src/config', () => ({
+  config: {
+    wgerApiKey: undefined,
+    wgerUsername: 'testuser',
+    wgerPassword: 'testpass',
+    wgerApiUrl: 'https://wger.de/api/v2',
+    httpTimeout: 10000,
+    logLevel: 'error' as const,
+    cacheTtlStatic: 86400,
+    cacheTtlExercise: 3600,
+  },
+}));
+
+// Import AuthManager after mocks are set up
+import { AuthManager } from '../../../src/client/auth';
 
 describe('AuthManager', () => {
   let authManager: AuthManager;
