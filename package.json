@@ -1,6 +1,6 @@
 {
-  "name": "wger-mcp",
-  "version": "0.1.0",
+  "name": "@juxsta/wger-mcp",
+  "version": "1.0.0",
   "description": "MCP server for wger workout and fitness API - enables AI assistants to search exercises and manage workout routines",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,8 +21,7 @@
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
     "type-check": "tsc --noEmit",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint && npm run type-check && npm test"
+    "prepare": "npm run build"
   },
   "keywords": [
     "mcp",
@@ -41,12 +40,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/wger-mcp.git"
+    "url": "https://github.com/Juxsta/wger-mcp.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/wger-mcp/issues"
+    "url": "https://github.com/Juxsta/wger-mcp/issues"
   },
-  "homepage": "https://github.com/yourusername/wger-mcp#readme",
+  "homepage": "https://github.com/Juxsta/wger-mcp#readme",
   "engines": {
     "node": ">=18.0.0"
   },

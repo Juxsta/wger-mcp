@@ -1,7 +1,7 @@
 # wger MCP Server
 
-[![Build Status](https://github.com/yourusername/wger-mcp/workflows/CI/badge.svg)](https://github.com/yourusername/wger-mcp/actions)
-[![npm version](https://badge.fury.io/js/wger-mcp.svg)](https://www.npmjs.com/package/wger-mcp)
+[![Build Status](https://github.com/Juxsta/wger-mcp/workflows/CI/badge.svg)](https://github.com/Juxsta/wger-mcp/actions)
+[![npm version](https://badge.fury.io/js/@juxsta/wger-mcp.svg)](https://www.npmjs.com/package/@juxsta/wger-mcp)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A production-ready Model Context Protocol (MCP) server that provides AI assistants like Claude with seamless access to the wger fitness API. Search through 400+ exercises, create workout routines, and manage fitness data - all through natural conversation.
@@ -38,16 +38,23 @@ This server implements the [Model Context Protocol](https://modelcontextprotocol
 
 ### Installation
 
-Install globally via npm (once published):
+**Option 1: Using Claude Code CLI (Recommended)**
 
 ```bash
-npm install -g wger-mcp
+claude mcp add wger -e WGER_API_KEY=your_key_here -- npx -y @juxsta/wger-mcp
 ```
 
-Or for development, clone and build locally:
+**Option 2: Install globally via npm**
 
 ```bash
-git clone https://github.com/yourusername/wger-mcp.git
+npm install -g @juxsta/wger-mcp
+claude mcp add wger -e WGER_API_KEY=your_key_here -- wger-mcp
+```
+
+**Option 3: For development, clone and build locally**
+
+```bash
+git clone https://github.com/Juxsta/wger-mcp.git
 cd wger-mcp
 npm install
 npm run build
@@ -152,7 +159,7 @@ Authentication is only required for workout management tools. Exercise discovery
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/wger-mcp.git
+git clone https://github.com/Juxsta/wger-mcp.git
 cd wger-mcp
 
 # Install dependencies
@@ -230,8 +237,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/wger-mcp/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/wger-mcp/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Juxsta/wger-mcp/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Juxsta/wger-mcp/discussions)
 - **wger Community**: [wger GitHub](https://github.com/wger-project/wger)
 
 ## Acknowledgments

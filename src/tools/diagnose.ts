@@ -15,6 +15,7 @@ export const diagnoseTool: Tool = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function diagnoseHandler(): Promise<Record<string, unknown>> {
   return {
     hasApiKey: Boolean(config.wgerApiKey),
