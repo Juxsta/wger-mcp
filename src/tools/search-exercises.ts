@@ -98,8 +98,8 @@ export async function searchExercisesHandler(
     params.category = validatedInput.category;
   }
 
-  // Fetch from API with query parameters
-  const response = await wgerClient.get<unknown>('/exercise/', { params });
+  // Fetch from API with query parameters (using exerciseinfo endpoint)
+  const response = await wgerClient.get<unknown>('/exerciseinfo/', { params });
 
   // Validate response structure
   const validatedResponse = PaginatedExerciseSchema.parse(response);

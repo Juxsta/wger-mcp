@@ -74,10 +74,10 @@ export async function getExerciseDetailsHandler(args: Record<string, unknown>): 
     return cached;
   }
 
-  // Fetch from API
+  // Fetch from API (using exerciseinfo endpoint)
   let response: unknown;
   try {
-    response = await wgerClient.get<unknown>(`/exercise/${exerciseId}/`);
+    response = await wgerClient.get<unknown>(`/exerciseinfo/${exerciseId}/`);
   } catch (error) {
     // Transform 404 errors to NotFoundError with user-friendly message
     if (error instanceof NotFoundError) {
@@ -92,7 +92,9 @@ export async function getExerciseDetailsHandler(args: Record<string, unknown>): 
   // Cache the result for 1 hour
   cache.set(cacheKey, validatedExercise, config.cacheTtlExercise);
 
-  logger.info(`Fetched details for exercise ${exerciseId}: ${validatedExercise.name}`);
+  // Get exercise name from first translation (if available)
+  const exerciseName = validatedExercise.translations[0]?.name || `Exercise ${exerciseId}`;
+  logger.info(`Fetched details for exercise ${exerciseId}: ${exerciseName}`);
 
   return validatedExercise;
 }
