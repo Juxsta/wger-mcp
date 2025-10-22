@@ -80,7 +80,11 @@ export async function createWorkoutHandler(args: Record<string, unknown>): Promi
   // Set default dates if not provided
   const today = new Date();
   const startDate = start || today.toISOString().split('T')[0];
-  const endDate = end || new Date(today.getFullYear() + 1, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+  const endDate =
+    end ||
+    new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())
+      .toISOString()
+      .split('T')[0];
 
   logger.debug('Creating routine', { name, startDate, endDate, hasDescription: !!description });
 

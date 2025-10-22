@@ -56,7 +56,8 @@ export const addExerciseToRoutineTool: Tool = {
       },
       dayName: {
         type: 'string',
-        description: 'Optional name for the day (e.g., "Day 1", "Chest Day"). Creates new day if not found.',
+        description:
+          'Optional name for the day (e.g., "Day 1", "Chest Day"). Creates new day if not found.',
       },
       comment: {
         type: 'string',

@@ -104,13 +104,13 @@ export interface Exercise {
   /** Author of the exercise content */
   license_author: string;
   /** Array of image objects */
-  images: any[];
+  images: unknown[];
   /** Array of translation objects with name and description in multiple languages */
   translations: ExerciseTranslation[];
   /** Variation ID (can be null or a number) */
   variations: number | null;
   /** Array of video objects */
-  videos: any[];
+  videos: unknown[];
   /** Array of author names for this exercise */
   author_history: string[];
   /** Array of all author names including translations */
@@ -270,7 +270,7 @@ export interface SetsConfig {
   /** Whether to repeat */
   repeat: boolean;
   /** Optional requirements JSON */
-  requirements: any | null;
+  requirements: unknown;
 }
 
 /**
@@ -293,7 +293,7 @@ export interface RepetitionsConfig {
   /** Whether to repeat */
   repeat: boolean;
   /** Optional requirements JSON */
-  requirements: any | null;
+  requirements: unknown;
 }
 
 /**
@@ -316,7 +316,7 @@ export interface WeightConfig {
   /** Whether to repeat */
   repeat: boolean;
   /** Optional requirements JSON */
-  requirements: any | null;
+  requirements: unknown;
 }
 
 // Backwards compatibility alias
