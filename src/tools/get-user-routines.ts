@@ -7,7 +7,7 @@ import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { wgerClient } from '../client/wger-client';
 import { authManager } from '../client/auth';
 import { GetUserRoutinesSchema, GetUserRoutinesInput } from '../schemas/tools';
-import { PaginatedResponse, Workout } from '../types/wger';
+import { PaginatedResponse, Routine } from '../types/wger';
 import { AuthenticationError, ValidationError } from '../utils/errors';
 import { logger } from '../utils/logger';
 
@@ -50,7 +50,7 @@ export const getUserRoutinesTool: Tool = {
  */
 export async function getUserRoutinesHandler(
   args: Record<string, unknown>
-): Promise<PaginatedResponse<Workout>> {
+): Promise<PaginatedResponse<Routine>> {
   logger.info('Executing get_user_routines tool');
 
   // Validate authentication
@@ -79,7 +79,7 @@ export async function getUserRoutinesHandler(
 
     // Fetch routines via API with pagination
     // Note: No caching as user data may change frequently
-    const routines = await wgerClient.get<PaginatedResponse<Workout>>('/workout/', {
+    const routines = await wgerClient.get<PaginatedResponse<Routine>>('/routine/', {
       params: {
         limit,
         offset,

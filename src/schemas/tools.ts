@@ -70,7 +70,7 @@ export const GetExerciseDetailsSchema = z.object({
 
 /**
  * Schema for create_workout tool input validation
- * Validates workout name and description
+ * Validates workout name, description, and date range
  */
 export const CreateWorkoutSchema = z.object({
   /** Required workout name (1-100 characters) */
@@ -89,6 +89,20 @@ export const CreateWorkoutSchema = z.object({
       message: 'Workout description cannot exceed 500 characters',
     })
     .optional(),
+  /** Optional start date (YYYY-MM-DD format, defaults to today) */
+  start: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: 'Start date must be in YYYY-MM-DD format',
+    })
+    .optional(),
+  /** Optional end date (YYYY-MM-DD format, defaults to 1 year from start) */
+  end: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: 'End date must be in YYYY-MM-DD format',
+    })
+    .optional(),
 });
 
 /**
@@ -96,13 +110,9 @@ export const CreateWorkoutSchema = z.object({
  * Validates all parameters for adding an exercise to a workout routine
  */
 export const AddExerciseToRoutineSchema = z.object({
-  /** Required workout/routine ID */
-  workoutId: z.number().int().positive({
-    message: 'Workout ID must be a positive integer',
-  }),
-  /** Required day ID within the workout */
-  dayId: z.number().int().positive({
-    message: 'Day ID must be a positive integer',
+  /** Required routine ID */
+  routineId: z.number().int().positive({
+    message: 'Routine ID must be a positive integer',
   }),
   /** Required exercise ID to add */
   exerciseId: z.number().int().positive({
@@ -118,17 +128,16 @@ export const AddExerciseToRoutineSchema = z.object({
     .max(10, {
       message: 'Sets cannot exceed 10',
     }),
-  /** Optional number of reps per set (0-100) */
+  /** Required number of reps per set (1-100) */
   reps: z
     .number()
     .int()
-    .min(0, {
-      message: 'Reps cannot be negative',
+    .min(1, {
+      message: 'Reps must be at least 1',
     })
     .max(100, {
       message: 'Reps cannot exceed 100',
-    })
-    .optional(),
+    }),
   /** Optional weight in kg (must be non-negative) */
   weight: z
     .number()
@@ -136,19 +145,18 @@ export const AddExerciseToRoutineSchema = z.object({
       message: 'Weight cannot be negative',
     })
     .optional(),
-  /** Optional order of exercise in the day (default: 1) */
-  order: z
-    .number()
-    .int()
-    .positive({
-      message: 'Order must be a positive integer',
+  /** Optional day name (e.g., "Day 1", "Chest Day") */
+  dayName: z
+    .string()
+    .max(100, {
+      message: 'Day name cannot exceed 100 characters',
     })
-    .default(1),
-  /** Optional comment or notes (max 500 characters) */
+    .optional(),
+  /** Optional comment or notes (max 100 characters) */
   comment: z
     .string()
-    .max(500, {
-      message: 'Comment cannot exceed 500 characters',
+    .max(100, {
+      message: 'Comment cannot exceed 100 characters',
     })
     .optional(),
 });
