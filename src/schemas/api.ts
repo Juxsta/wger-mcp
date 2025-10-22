@@ -26,8 +26,21 @@ export const ExerciseTranslationSchema = z.object({
   description: z.string(),
   created: z.string(),
   language: z.number().int().positive(),
-  aliases: z.array(z.string()),
-  notes: z.array(z.string()),
+  aliases: z.array(
+    z.object({
+      id: z.number().int().positive(),
+      uuid: z.string(),
+      alias: z.string(),
+    })
+  ),
+  notes: z.array(
+    z.object({
+      id: z.number().int().positive(),
+      uuid: z.string(),
+      translation: z.number().int().positive(),
+      comment: z.string(),
+    })
+  ),
   license: z.number().int().positive(),
   license_title: z.string(),
   license_object_url: z.string(),

@@ -1,6 +1,6 @@
 {
   "name": "@juxsta/wger-mcp",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "MCP server for wger workout and fitness API - enables AI assistants to search exercises and manage workout routines",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

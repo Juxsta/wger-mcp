@@ -37,9 +37,18 @@ export interface ExerciseTranslation {
   /** Language ID */
   language: number;
   /** Array of exercise aliases */
-  aliases: string[];
+  aliases: Array<{
+    id: number;
+    uuid: string;
+    alias: string;
+  }>;
   /** Array of exercise notes */
-  notes: string[];
+  notes: Array<{
+    id: number;
+    uuid: string;
+    translation: number;
+    comment: string;
+  }>;
   /** License ID */
   license: number;
   /** License title */
