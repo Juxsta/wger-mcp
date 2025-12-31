@@ -56,7 +56,7 @@ export interface ExerciseTranslation {
   /** License object URL */
   license_object_url: string;
   /** Author of the license */
-  license_author: string;
+  license_author: string | null;
   /** Author URL */
   license_author_url: string;
   /** Derivative source URL */
@@ -111,7 +111,7 @@ export interface Exercise {
   /** License object */
   license: License;
   /** Author of the exercise content */
-  license_author: string;
+  license_author: string | null;
   /** Array of image objects */
   images: unknown[];
   /** Array of translation objects with name and description in multiple languages */
