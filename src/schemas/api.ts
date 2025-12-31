@@ -44,7 +44,7 @@ export const ExerciseTranslationSchema = z.object({
   license: z.number().int().positive(),
   license_title: z.string(),
   license_object_url: z.string(),
-  license_author: z.string(),
+  license_author: z.string().nullable(),
   license_author_url: z.string(),
   license_derivative_source_url: z.string(),
   author_history: z.array(z.string()),
