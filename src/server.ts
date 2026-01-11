@@ -27,6 +27,20 @@ import {
   addExerciseToRoutineHandler,
 } from './tools/add-exercise-to-routine';
 import { getUserRoutinesTool, getUserRoutinesHandler } from './tools/get-user-routines';
+import { getRoutineDetailsTool, getRoutineDetailsHandler } from './tools/get-routine-details';
+import {
+  addDayToRoutineTool,
+  addDayToRoutineHandler,
+  updateDayTool,
+  updateDayHandler,
+  deleteDayTool,
+  deleteDayHandler,
+} from './tools/manage-day';
+import {
+  updateExerciseInRoutineTool,
+  updateExerciseInRoutineHandler,
+} from './tools/update-exercise';
+import { deleteSlotTool, deleteSlotHandler } from './tools/delete-slot';
 
 // Import diagnostic tool
 import { diagnoseTool, diagnoseHandler } from './tools/diagnose';
@@ -201,6 +215,12 @@ export function createServer(): WgerMCPServer {
   server.registerTool(createWorkoutTool, createWorkoutHandler);
   server.registerTool(addExerciseToRoutineTool, addExerciseToRoutineHandler);
   server.registerTool(getUserRoutinesTool, getUserRoutinesHandler);
+  server.registerTool(getRoutineDetailsTool, getRoutineDetailsHandler);
+  server.registerTool(addDayToRoutineTool, addDayToRoutineHandler);
+  server.registerTool(updateDayTool, updateDayHandler);
+  server.registerTool(deleteDayTool, deleteDayHandler);
+  server.registerTool(updateExerciseInRoutineTool, updateExerciseInRoutineHandler);
+  server.registerTool(deleteSlotTool, deleteSlotHandler);
 
   // Register diagnostic tool
   server.registerTool(diagnoseTool, diagnoseHandler);

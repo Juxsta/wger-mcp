@@ -117,7 +117,9 @@ export async function addExerciseToRoutineHandler(
       params: { routine: routineId },
     });
 
-    const existingDays = daysResponse.results.map((d) => DaySchema.parse(d));
+    const existingDays = daysResponse.results
+      .map((d) => DaySchema.parse(d))
+      .filter((d) => d.routine === routineId);
     const existingDay = existingDays.find((d) => d.name === dayNameToUse);
 
     if (existingDay) {

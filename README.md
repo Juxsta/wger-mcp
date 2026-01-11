@@ -19,7 +19,7 @@ This server implements the [Model Context Protocol](https://modelcontextprotocol
 
 ## Key Features
 
-- **8 Powerful Tools**: Comprehensive exercise discovery and workout management capabilities
+- **12 Powerful Tools**: Comprehensive exercise discovery and workout management capabilities
 - **Type-Safe**: Built with TypeScript in strict mode with full type definitions
 - **Intelligent Caching**: Automatic caching of static data to minimize API calls
 - **Robust Authentication**: JWT-based auth with automatic token refresh
@@ -41,7 +41,7 @@ This server implements the [Model Context Protocol](https://modelcontextprotocol
 **Option 1: Using Claude Code CLI (Recommended)**
 
 ```bash
-claude mcp add wger -e WGER_API_KEY=your_key_here -- npx -y @juxsta/wger-mcp
+claude mcp add wger -e WGER_API_KEY=your_key_here -- npx -y @juxsta/wger-mcp@1.1.3
 ```
 
 **Option 2: Install globally via npm**
@@ -107,7 +107,10 @@ For detailed setup instructions, see [SETUP.md](docs/SETUP.md).
 ### Workout Management (Authentication Required)
 
 - **`create_workout`** - Create a new workout routine
-- **`add_exercise_to_routine`** - Add exercises to a routine with sets, reps, and weights
+- **`get_routine_details`** - Fetch full routine structure (days, slots, exercises)
+- **`add_day_to_routine`** / **`update_day`** / **`delete_day`** - Manage scheduling
+- **`add_exercise_to_routine`** / **`update_exercise_in_routine`** - Manage exercises and their sets/reps
+- **`delete_slot`** - Remove exercises from days
 - **`get_user_routines`** - Retrieve all workout routines for the authenticated user
 
 For complete tool documentation, see [API.md](docs/API.md).
